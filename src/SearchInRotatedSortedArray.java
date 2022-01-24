@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /**
  * There is an integer array nums sorted in ascending order (with distinct values).
  *
@@ -34,7 +36,7 @@
  * 4 5 6 7 8 9 1 2 3
  */
 public class SearchInRotatedSortedArray {
-    public int search(int[] nums, int target) {
+    public int search(int[] nums, int target) throws Exception {
         int start = 0, end = nums.length-1;
         while(start <= end) {
             int mid = start + (end - start)/2;
@@ -56,5 +58,9 @@ public class SearchInRotatedSortedArray {
             }
         }
         return -1;
+    }
+    public static void main(String [] args) throws IOException, Exception{
+        SearchInRotatedSortedArray s = new SearchInRotatedSortedArray();
+        s.search(new int [3], 5);
     }
 }
