@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * There is an integer array nums sorted in ascending order (with distinct values).
@@ -62,5 +63,29 @@ public class SearchInRotatedSortedArray {
     public static void main(String [] args) throws IOException, Exception{
         SearchInRotatedSortedArray s = new SearchInRotatedSortedArray();
         s.search(new int [3], 5);
+        int [] a = {1,2,3,4};
+        int [] b = {1,2,3,4,5};
+        System.out.println(Arrays.mismatch(a, b));
+        System.out.println(Arrays.mismatch(b, a));
+        System.out.println(Arrays.compare(a, b));
+        System.out.println(Arrays.compare(b, a));
+        double cc = 3L;
+        long max = 987;
+        long min5 = 13__123;
+        int [] test = new int[3];
+        test[0] = 'x';
+        int __ = 0;
+
+    }
+
+    public void ___() {
+
+    }
+
+    public double test() {
+        return .007;
+    }
+
+    public @interface anno {
     }
 }
