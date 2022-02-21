@@ -39,20 +39,23 @@
 import java.util.*;
 public class NextGreaterElementI {
     public int[] nextGreaterElement(int[] nums1, int[] nums2) {
-        int [] nextGreater = new int [nums2.length];
-        Arrays.fill(nextGreater, -1);
-        Stack<int []> stack = new Stack<>();
-        for(int i=0; i<nums2.length; i++) {
-            while(!stack.isEmpty() && stack.peek()[0] < nums2[i]) {
-                int [] temp = stack.pop();
-                nextGreater[temp[1]] = nums2[i];
-            }
-            stack.push(new int [] {nums2[i], i});
-        }
+        //step1: calculate all elements' next greater element in nums2
+        //step2: use hash map to return res in O(1)
+        Stack<Integer> monStack = new Stack<>();
         Map<Integer, Integer> map = new HashMap<>();
-        for(int i=0; i<nextGreater.length; i++) map.put(nums2[i], nextGreater[i]);
+        for(int i = 0; i<nums2.length; i++) {
+            int cur = nums2[i];
+            while(!monStack.isEmpty() && cur > monStack.peek()) {
+                int temp = monStack.pop();
+                map.put(temp, cur);
+            }
+            monStack.push(cur);
+        }
+        for(int i : monStack) {
+            map.put(i, -1);
+        }
         int [] res = new int [nums1.length];
-        for(int i=0; i<nums1.length; i++) {
+        for(int i = 0; i<nums1.length; i++) {
             res[i] = map.get(nums1[i]);
         }
         return res;
