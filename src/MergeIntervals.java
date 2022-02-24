@@ -51,6 +51,30 @@ public class MergeIntervals {
         return ret;
     }
 
+    public int [][] mergeRewrite(int [][] intervals) {
+
+            List<int []> list = new ArrayList<>();
+            Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+            int [] cur = intervals[0];
+            for(int i = 1; i<intervals.length; i++) {
+                int [] temp = intervals[i];
+                if(temp[0] <= cur[1]) {
+                    cur[1] = Math.max(cur[1], temp[1]);
+                } else {
+                    list.add(cur);
+                    cur = temp;
+                }
+            }
+            list.add(cur);
+            int [][] res = new int [list.size()][2];
+            int i=0;
+            for(int [] interval : list) {
+                res[i++] = interval;
+            }
+            return res;
+
+    }
+
     public static void main(String ... args) {
         Map map = new HashMap();
         map.put(123, "456");
