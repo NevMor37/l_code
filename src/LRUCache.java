@@ -1,4 +1,85 @@
 /**
+ *  class DLinkedNode {
+ *         int key;
+ *         int value;
+ *         DLinkedNode next;
+ *         DLinkedNode prev;
+ *     }
+ *
+ *     public void addNode(DLinkedNode node) {
+ *         node.next = head.next;
+ *         node.prev = head;
+ *
+ *         head.next.prev = node;
+ *         head.next = node;
+ *     }
+ *
+ *     public void removeNode (DLinkedNode node) {
+ *         DLinkedNode next = node.next;
+ *         DLinkedNode prev = node.prev;
+ *         next.prev = prev;
+ *         prev.next = next;
+ *     }
+ *
+ *     //move to head in constant time
+ *     public void moveToHead(DLinkedNode node) {
+ *         removeNode(node);
+ *         addNode(node);
+ *     }
+ *
+ *     public DLinkedNode popTail() {
+ *         DLinkedNode node = tail.prev;
+ *         removeNode(node);
+ *         return node;
+ *     }
+ *
+ *     private int capacity;
+ *     private int size;
+ *     private Map<Integer, DLinkedNode> map;
+ *     DLinkedNode head;
+ *     DLinkedNode tail;
+ *
+ *     public LRUCache(int capacity) {
+ *         this.capacity = capacity;
+ *         this.size = 0;
+ *         map = new HashMap<>();
+ *         head = new DLinkedNode();
+ *         tail = new DLinkedNode();
+ *
+ *         head.next = tail;
+ *         tail.prev = head;
+ *     }
+ *
+ *     public int get(int key) {
+ *         DLinkedNode node = map.get(key);
+ *         if(node == null) {
+ *             return -1;
+ *         }
+ *         moveToHead(node);
+ *         return node.value;
+ *     }
+ *
+ *     public void put(int key, int value) {
+ *
+ *         DLinkedNode check = map.get(key);
+ *         if(check == null) {
+ *             DLinkedNode node = new DLinkedNode();
+ *             node.key = key;
+ *             node.value = value;
+ *             addNode(node);
+ *             size++;
+ *             map.put(key, node);
+ *             if(size > capacity) {
+ *                 DLinkedNode temp = popTail();
+ *                 map.remove(temp.key);
+ *                 size--;
+ *             }
+ *         } else {
+ *             DLinkedNode node = map.get(key);
+ *             node.value = value;
+ *             moveToHead(node);
+ *         }
+ *     }
  * Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
  *
  * Implement the LRUCache class:
@@ -42,85 +123,75 @@
 import java.util.*;
 //hash map + doubled linked list
 public class LRUCache {
-    class DLinkedNode {
+    class DLinkedListNode {
+        DLinkedListNode next;
+        DLinkedListNode prev;
         int key;
-        int value;
-        DLinkedNode next;
-        DLinkedNode prev;
+        int val;
+    }
+    DLinkedListNode head;
+    DLinkedListNode tail;
+    int capacity;
+    int size;
+    Map<Integer, DLinkedListNode> map;
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        this.size = 0;
+        head = new DLinkedListNode();
+        tail = new DLinkedListNode();
+        head.next = tail;
+        tail.prev = head;
+        map = new HashMap<>();
     }
 
-    public void addNode(DLinkedNode node) {
-        node.next = head.next;
-        node.prev = head;
+    public void removeNode (DLinkedListNode node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
 
+    public void addToHead(DLinkedListNode node) {
+        node.prev = head;
+        node.next = head.next;
         head.next.prev = node;
         head.next = node;
     }
 
-    public void removeNode (DLinkedNode node) {
-        DLinkedNode next = node.next;
-        DLinkedNode prev = node.prev;
-        next.prev = prev;
-        prev.next = next;
-    }
-
-    //move to head in constant time
-    public void moveToHead(DLinkedNode node) {
-        removeNode(node);
-        addNode(node);
-    }
-
-    public DLinkedNode popTail() {
-        DLinkedNode node = tail.prev;
-        removeNode(node);
-        return node;
-    }
-
-    private int capacity;
-    private int size;
-    private Map<Integer, DLinkedNode> map;
-    DLinkedNode head;
-    DLinkedNode tail;
-
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.size = 0;
-        map = new HashMap<>();
-        head = new DLinkedNode();
-        tail = new DLinkedNode();
-
-        head.next = tail;
-        tail.prev = head;
+    public DLinkedListNode popTail() {
+        DLinkedListNode res = tail.prev;
+        res.prev.next = this.tail;
+        tail.prev = res.prev;
+        return res;
     }
 
     public int get(int key) {
-        DLinkedNode node = map.get(key);
-        if(node == null) {
-            return -1;
+        if(map.get(key) != null) {
+            DLinkedListNode node = map.get(key);
+            removeNode(node);
+            addToHead(node);
+            return node.val;
         }
-        moveToHead(node);
-        return node.value;
+        return -1;
     }
 
     public void put(int key, int value) {
-
-        DLinkedNode check = map.get(key);
-        if(check == null) {
-            DLinkedNode node = new DLinkedNode();
+        if(map.containsKey(key)) {
+            DLinkedListNode node = map.get(key);
+            removeNode(node);
+            node.val = value;
+            addToHead(node);
+            map.put(key, node);
+        } else {
+            DLinkedListNode node = new DLinkedListNode();
             node.key = key;
-            node.value = value;
-            addNode(node);
+            node.val = value;
             size++;
+            addToHead(node);
             map.put(key, node);
             if(size > capacity) {
-                DLinkedNode temp = popTail();
-                map.remove(temp.key);
+                DLinkedListNode tail = popTail();
+                map.remove(tail.key);
                 size--;
             }
-        } else {
-            DLinkedNode node = map.get(key);
-            node.value = value;
-            moveToHead(node);
         }
     }
 }
