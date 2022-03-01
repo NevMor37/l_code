@@ -29,6 +29,37 @@
  * s consists of lowercase English letters, digits, and square brackets '[]'.
  * s is guaranteed to be a valid input.
  * All the integers in s are in the range [1, 300].
+ *
+ * Stack<Integer> numStack = new Stack<>();
+ *         Stack<String> strStack = new Stack<>();
+ *         StringBuilder sb = new StringBuilder();
+ *         int i = 0;
+ *         while(i < s.length()) {
+ *             char cur = s.charAt(i);
+ *             if(Character.isDigit(cur)) {
+ *                 int num = cur - '0';
+ *                 while(i < s.length()-1 && Character.isDigit(s.charAt(i+1))) {
+ *                     i++;
+ *                     num = num * 10 + s.charAt(i) - '0';
+ *                 }
+ *                 numStack.push(num);
+ *             } else if(cur == '[') {
+ *                 strStack.push(sb.toString());
+ *                 sb = new StringBuilder();
+ *             } else if(cur == ']') {
+ *                 int repeat = numStack.pop();
+ *                 System.out.println(repeat);
+ *                 String prev = strStack.pop();
+ *                 for(int j=0;j<repeat;j++) {
+ *                     prev+=sb.toString();
+ *                 }
+ *                 sb = new StringBuilder(prev);
+ *             } else {
+ *                 sb.append(cur);
+ *             }
+ *             i++;
+ *         }
+ *         return sb.toString();
  */
 import java.util.*;
 public class DecodeString {

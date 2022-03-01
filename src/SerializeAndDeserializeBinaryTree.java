@@ -25,6 +25,57 @@
  *
  * The number of nodes in the tree is in the range [0, 104].
  * -1000 <= Node.val <= 1000
+ *
+ *  String s = "";
+ *     // Encodes a tree to a single string.
+ *     public String serialize(TreeNode root) {
+ *         if(root == null) return s;
+ *         s+=root.val;
+ *         preOrder(root.left);
+ *         preOrder(root.right);
+ *         System.out.println(s);
+ *         return s;
+ *     }
+ *
+ *     public void preOrder(TreeNode root) {
+ *         if(root == null) {
+ *             s+=",null";
+ *             return;
+ *         }
+ *         s+="," + root.val;
+ *         preOrder(root.left);
+ *         preOrder(root.right);
+ *     }
+ *     //
+ *     // Decodes your encoded data to tree.
+ *     public TreeNode deserialize(String data) {
+ *         if(data == null || data.length() == 0) return null;
+ *         String [] strs = data.split(",");
+ *         List<String> datas = new ArrayList<>();
+ *         for(String str : strs) {
+ *             datas.add(str);
+ *         }
+ *         for(String str : datas) {
+ *             System.out.println(str);
+ *         }
+ *         return deserialize(datas);
+ *     }
+ *
+ *     public TreeNode deserialize(List<String> datas) {
+ *         if(datas.size() == 0) {
+ *             return null;
+ *         }
+ *         if(datas.get(0).equals("null")) {
+ *             datas.remove(0);
+ *             return null;
+ *         }
+ *         int val = Integer.valueOf(datas.get(0));
+ *         datas.remove(0);
+ *         TreeNode node = new TreeNode(val);
+ *         node.left = deserialize(datas);
+ *         node.right = deserialize(datas);
+ *         return node;
+ *     }
  */
 import java.util.*;
 public class SerializeAndDeserializeBinaryTree {

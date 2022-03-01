@@ -19,6 +19,25 @@ import java.util.*;
  *
  * 1 <= intervals.length <= 104
  * 0 <= starti < endi <= 106
+ *
+ * public int minMeetingRooms(int[][] intervals) {
+ *         if(intervals.length == 1) return 1;
+ *         int res = 1;
+ *         PriorityQueue<int []> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+ *         Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+ *         pq.offer(intervals[0]);
+ *         for(int i=1; i<intervals.length; i++) {
+ *             int [] cur = intervals[i];
+ *             if(cur[0] < pq.peek()[1]) {
+ *                 res++;
+ *                 pq.offer(cur);
+ *             } else {
+ *                 pq.poll();
+ *                 pq.offer(cur);
+ *             }
+ *         }
+ *         return res;
+ *     }
  */
 public class MeetingRoomsII {
     //we use heap to populate the earlist ending meeting (by sort the interval in heap by ending time)
