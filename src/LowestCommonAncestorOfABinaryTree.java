@@ -31,6 +31,23 @@
  * All Node.val are unique.
  * p != q
  * p and q will exist in the tree.
+ *
+ *  TreeNode ret;
+ *     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+ *         dfs(root, p, q);
+ *         return ret;
+ *     }
+ *
+ *     public boolean dfs(TreeNode root, TreeNode p, TreeNode q) {
+ *         if(root == null) return false;
+ *         int res = 0;
+ *         if(root.val == p.val || root.val == q.val) res++;
+ *         int left = dfs(root.left, p, q) ? 1 : 0;
+ *         int right = dfs(root.right, p, q) ? 1 : 0;
+ *         res += left + right;
+ *         if(res > 1 && ret == null) ret = root;
+ *         return res > 0;
+ *     }
  */
 public class LowestCommonAncestorOfABinaryTree {
     TreeNode res = null;

@@ -30,6 +30,40 @@
  * s represents a valid expression.
  * All the integers in the expression are non-negative integers in the range [0, 231 - 1].
  * The answer is guaranteed to fit in a 32-bit integer.
+ *
+ * public int calculate(String s) {
+ *         s = s.replaceAll(" ", "");
+ *         char sign = '+';
+ *         char [] chars = s.toCharArray();
+ *         Stack<Integer> stack = new Stack();
+ *         int i = 0;
+ *         while(i < s.length()) {
+ *             char cur = chars[i];
+ *             int val = 0;
+ *             if(Character.isDigit(cur)) {
+ *                 val += cur - '0';
+ *                 while(i + 1 <s.length() && Character.isDigit(chars[i+1])) {
+ *                     i++;
+ *                     val = val * 10 + (chars[i] - '0');
+ *                 }
+ *                 if(sign == '+') {
+ *                     stack.push(val);
+ *                 } else if(sign == '-') {
+ *                     stack.push(-val);
+ *                 } else if(sign == '*') {
+ *                     stack.push(stack.pop() * val);
+ *                 } else {
+ *                     stack.push(stack.pop()/val);
+ *                 }
+ *             } else {
+ *                 sign = cur;
+ *             }
+ *             i++;
+ *         }
+ *         int res = 0;
+ *         for(int sub : stack) res += sub;
+ *         return res;
+ *     }
  */
 import java.util.*;
 public class BasicCalculatorII {
