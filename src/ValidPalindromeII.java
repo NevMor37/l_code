@@ -24,6 +24,27 @@ import java.io.IOException;
  *
  * 1 <= s.length <= 105
  * s consists of lowercase English letters.
+ *
+ * class Solution {
+ *     boolean remove;
+ *     public boolean validPalindrome(String s) {
+ *         return checkPalindrome(s, 0, s.length()-1);
+ *     }
+ *
+ *     public boolean checkPalindrome(String s, int start, int end) {
+ *         if(start > end) return true;
+ *         if(start == end) return true;
+ *         if(s.charAt(start) == s.charAt(end)) {
+ *             return checkPalindrome(s, start + 1, end -1);
+ *         } else {
+ *             if(!remove) {
+ *                 remove = true;
+ *                 return checkPalindrome(s, start +1, end) || checkPalindrome(s, start, end-1);
+ *             }
+ *             return false;
+ *         }
+ *     }
+ * }
  */
 public class ValidPalindromeII {
     // time exceed

@@ -26,9 +26,7 @@
  * 0 <= s.length <= 20
  * s consists of digits only.
  */
-/**
- * 25525511135
- */
+
 
 import java.util.*;
 public class RestoreIPAddresses {
