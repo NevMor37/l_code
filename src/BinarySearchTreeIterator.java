@@ -107,6 +107,13 @@ class BSTIterator {
     public boolean hasNext() {
        return !stack.isEmpty();
     }
+
+    public static void main(String [] args) {
+        String test = "a/b/c/d/e/";
+        String [] res = test.split("/");
+        System.out.println(res.length);
+        for(String str : res) System.out.println(str);
+    }
 }
 
 /**

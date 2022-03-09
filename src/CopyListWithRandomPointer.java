@@ -38,20 +38,21 @@
  * 0 <= n <= 1000
  * -104 <= Node.val <= 104
  * Node.random is null or is pointing to some node in the linked list.
+ *
+ *     public Node copyRandomListRecursive(Node head) {
+ *         if(head == null) return null;
+ *         if(map.containsKey(head)) {
+ *             return map.get(head);
+ *         }
+ *         Node node = new Node(head.val);
+ *         map.put(head, node);
+ *         node.next = copyRandomListRecursive(head.next);
+ *         node.random = copyRandomListRecursive(head.random);
+ *         return node;
+ *     }
  */
 import java.util.*;
 public class CopyListWithRandomPointer {
-    public Node copyRandomListRecursive(Node head) {
-        if(head == null) return null;
-        if(map.containsKey(head)) {
-            return map.get(head);
-        }
-        Node node = new Node(head.val);
-        map.put(head, node);
-        node.next = copyRandomListRecursive(head.next);
-        node.random = copyRandomListRecursive(head.random);
-        return node;
-    }
     Map<Node, Node> map = new HashMap<>();
     //iterative
     public Node getClonedNode(Node head) {
@@ -63,7 +64,7 @@ public class CopyListWithRandomPointer {
         map.put(head, node);
         return node;
     }
-    public Node copyRandomList(Node head) {
+    public Node copyRandomListIterative(Node head) {
         if(head == null) return null;
         Node node = getClonedNode(head);
         Node nodeCopy = node;
@@ -74,6 +75,22 @@ public class CopyListWithRandomPointer {
             node = node.next;
         }
         return nodeCopy;
+    }
+
+    //Map<Node, Node> map;
+    public Node copyRandomList(Node head) {
+        map = new HashMap<>();
+        return dfs(head);
+    }
+
+    public Node dfs(Node head) {
+        if(head == null) return null;
+        if(map.containsKey(head)) return map.get(head);
+        Node copy = new Node(head.val);
+        map.put(head, copy);
+        copy.random = dfs(head.random);
+        copy.next = dfs(head.next);
+        return copy;
     }
 }
 class Node {

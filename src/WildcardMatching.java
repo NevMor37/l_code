@@ -7,6 +7,38 @@
  *
  *
  *
+ *
+ * Boolean [][] dp;
+ *     public boolean isMatch(String s, String p) {
+ *         dp = new Boolean[s.length()][p.length()];
+ *         return backtrack(0, 0, s, p);
+ *     }
+ *
+ *     public boolean backtrack(int index1, int index2, String s, String p) {
+ *         if(index1 == s.length() && index2 == p.length()) {
+ *             return true;
+ *         }
+ *         if(index1 == s.length()) {
+ *             for(int index = index2;index<p.length();index++){
+ *                 if(p.charAt(index)!='*'){
+ *                     return false;
+ *                 }
+ *             }
+ *             return true;
+ *         }
+ *         if(index2 == p.length()) return false;
+ *         if(dp[index1][index2] != null) return dp[index1][index2];
+ *
+ *         boolean res = false;
+ *         if(p.charAt(index2) == '?' || p.charAt(index2) == s.charAt(index1)) {
+ *             res = backtrack(index1 +1, index2 +1, s, p);
+ *         } else if(p.charAt(index2) == '*') {
+ *             res = backtrack(index1+1, index2+1, s, p) || backtrack(index1+1, index2, s, p) || backtrack(index1, index2+1, s, p);
+ *         }
+ *
+ *         dp[index1][index2] = res;
+ *         return res;
+ *     }
  * Example 1:
  *
  * Input: s = "aa", p = "a"
@@ -79,33 +111,38 @@ public class WildcardMatching {
 
     Boolean [][] dp;
     public boolean isMatch(String s, String p) {
+        if(p.length() == 0) return s.length() == 0;
         dp = new Boolean[s.length()][p.length()];
-        return backtrack(0, 0, s, p);
+        return backtrack(s, p, 0, 0);
     }
 
-    public boolean backtrack(int index1, int index2, String s, String p) {
-        if(index1 == s.length() && index2 == p.length()) {
+    public boolean backtrack(String s, String p, int indexS, int indexP) {
+        if(indexS == s.length() && indexP == p.length()) {
             return true;
         }
-        if(index1 == s.length()) {
-            for(int index = index2;index<p.length();index++){
-                if(p.charAt(index)!='*'){
+        if(indexS == s.length()) {
+            for(int i=indexP; i<p.length(); i++) {
+                if(p.charAt(i) != '*') {
                     return false;
                 }
             }
             return true;
         }
-        if(index2 == p.length()) return false;
-        if(dp[index1][index2] != null) return dp[index1][index2];
 
-        boolean res = false;
-        if(p.charAt(index2) == '?' || p.charAt(index2) == s.charAt(index1)) {
-            res = backtrack(index1 +1, index2 +1, s, p);
-        } else if(p.charAt(index2) == '*') {
-            res = backtrack(index1+1, index2+1, s, p) || backtrack(index1+1, index2, s, p) || backtrack(index1, index2+1, s, p);
+        if(indexP == p.length()) {
+            return false;
         }
 
-        dp[index1][index2] = res;
+        if(dp[indexS][indexP] != null) return dp[indexS][indexP];
+        boolean res = false;
+        if(s.charAt(indexS) == p.charAt(indexP) || p.charAt(indexP) == '?') {
+            res = backtrack(s, p, indexS + 1, indexP + 1);
+        } else if(p.charAt(indexP) == '*') {
+            res = backtrack(s, p, indexS, indexP + 1) || backtrack(s, p, indexS + 1, indexP) || backtrack(s, p, indexS + 1, indexP+1);
+        } else {
+            res = false;
+        }
+        dp[indexS][indexP] = res;
         return res;
     }
 }

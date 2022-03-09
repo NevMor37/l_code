@@ -49,60 +49,132 @@
 import java.util.*;
 public class DesignFileSystem {
 }
+//class FileSystem {
+//    class TrieNode {
+//        String name;
+//        Integer value;
+//        Map<String, TrieNode> children = new HashMap<>();
+//    }
+//    TrieNode root;
+//    public FileSystem() {
+//        root = new TrieNode();
+//    }
+//
+//    public boolean createPath(String path, int value) {
+//        String [] paths = path.split("/");
+//        TrieNode node = root;
+//        for(int i=1; i<paths.length; i++) {
+//            if(!node.children.containsKey(paths[i])) {
+//                if(i == paths.length-1) {
+//                    TrieNode temp = new TrieNode();
+//                    temp.name = paths[i];
+//                    node.children.put(paths[i], temp);
+//                } else {
+//                    return false;
+//                }
+//            }
+//            node = node.children.get(paths[i]);
+//        }
+//        if(node.value== null) {
+//            node.value = value;
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    public int get(String path) {
+//        String [] paths = path.split("/");
+//        TrieNode node = root;
+//        for(int i=1; i<paths.length; i++) {
+//            if(!node.children.containsKey(paths[i])) {
+//                return -1;
+//            }
+//            node = node.children.get(paths[i]);
+//        }
+//        if(node.value!= null) {
+//            return node.value;
+//        }
+//        return -1;
+//    }
+//
+//    public static void main(String [] args) {
+//        FileSystem fs = new FileSystem();
+//        fs.createPath("/leet", 1);
+//        fs.createPath("/leet/code", 2);
+//        fs.get("leet/code");
+//        fs.createPath("/c/d", 1);
+//        fs.get("c");
+//    }
+//}
+
 class FileSystem {
     class TrieNode {
-        String name;
-        Integer value;
+        String fileName;
+        String content;
         Map<String, TrieNode> children = new HashMap<>();
     }
     TrieNode root;
     public FileSystem() {
-        root = new TrieNode();
+        this.root = new TrieNode();
     }
 
-    public boolean createPath(String path, int value) {
+    public List<String> ls(String path) {
         String [] paths = path.split("/");
-        TrieNode node = root;
-        for(int i=1; i<paths.length; i++) {
-            if(!node.children.containsKey(paths[i])) {
-                if(i == paths.length-1) {
-                    TrieNode temp = new TrieNode();
-                    temp.name = paths[i];
-                    node.children.put(paths[i], temp);
-                } else {
-                    return false;
-                }
-            }
-            node = node.children.get(paths[i]);
+        TrieNode node = this.root;
+        for(int i = 1; i<paths.length; i++) {
+            String cur = paths[i];
+            node = node.children.get(cur);
         }
-        if(node.value== null) {
-            node.value = value;
-            return true;
+        List<String> res = new ArrayList<>();
+        if(node.content != null) {
+            res.add(node.fileName);
+            return res;
         }
-        return false;
+        for(TrieNode n : node.children.values()) res.add(n.fileName);
+        Collections.sort(res);
+        return res;
     }
 
-    public int get(String path) {
+    public void mkdir(String path) {
         String [] paths = path.split("/");
-        TrieNode node = root;
-        for(int i=1; i<paths.length; i++) {
-            if(!node.children.containsKey(paths[i])) {
-                return -1;
+        TrieNode node = this.root;
+        for(int i = 1; i<paths.length; i++) {
+            String cur = paths[i];
+            if(!node.children.containsKey(cur)) {
+                TrieNode temp = new TrieNode();
+                temp.fileName = cur;
+                node.children.put(cur, temp);
             }
-            node = node.children.get(paths[i]);
+            node = node.children.get(cur);
         }
-        if(node.value!= null) {
-            return node.value;
-        }
-        return -1;
     }
 
-    public static void main(String [] args) {
-        FileSystem fs = new FileSystem();
-        fs.createPath("/leet", 1);
-        fs.createPath("/leet/code", 2);
-        fs.get("leet/code");
-        fs.createPath("/c/d", 1);
-        fs.get("c");
+    public void addContentToFile(String filePath, String content) {
+        String [] paths = filePath.split("/");
+        TrieNode node = this.root;
+        for(int i = 1; i<paths.length; i++) {
+            String cur = paths[i];
+            if(!node.children.containsKey(cur)) {
+                TrieNode temp = new TrieNode();
+                temp.fileName = cur;
+                node.children.put(cur, temp);
+            }
+            node = node.children.get(cur);
+        }
+        if(node.content == null) {
+            node.content = content;
+        } else {
+            node.content += content;
+        }
+    }
+
+    public String readContentFromFile(String filePath) {
+        String [] paths = filePath.split("/");
+        TrieNode node = this.root;
+        for(int i = 1; i<paths.length; i++) {
+            String cur = paths[i];
+            node = node.children.get(cur);
+        }
+        return node.content;
     }
 }

@@ -26,11 +26,9 @@
  * All Nodes will have unique values.
  */
 public class InorderSuccessorInBST {
-    TreeNode target;
-    TreeNode pre;
-    TreeNode res = null;
+    TreeNode prev;
+    TreeNode inorderSuccessor;
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
-        //case 1: smallest node of the right subtree
         if(p.right != null) {
             p = p.right;
             while(p.left != null) {
@@ -38,35 +36,40 @@ public class InorderSuccessorInBST {
             }
             return p;
         }
-        this.target = p;
-        //case2
-        inorder(root);
-        return res;
+        inorder(root, p);
+        return inorderSuccessor;
     }
-
-    public void inorder(TreeNode node) {
-        if(node == null) return;
-        inorder(node.left);
-        if(this.target == this.pre && this.res == null) {
-            this.res = node;
+    public void inorder(TreeNode root, TreeNode p) {
+        if(root == null) return;
+        inorder(root.left, p);
+        if(prev == p && inorderSuccessor == null) {
+            inorderSuccessor = root;
             return;
         }
-        this.pre = node;
-        inorder(node.right);
+        prev = root;
+        inorder(root.right, p);
     }
 
-    public TreeNode inorderSuccessorBST(TreeNode root, TreeNode p) {
+    public TreeNode inorderSuccessorBest(TreeNode root, TreeNode p) {
+        if(p.right != null) {
+            p = p.right;
+            while(p.left != null) {
+                p = p.left;
+            }
+            return p;
+        }
+        TreeNode node = root;
         TreeNode prev = null;
-        while(root != null) {
-            if(p.val >= root.val) {
-                root = root.right;
+        while(node != null) {
+            if(node.val > p.val) {
+                prev = node;
+                node = node.left;
+            } else if(node.val < p.val){
+                node = node.right;
             } else {
-                //go back from right, parent already visited
-                //keep going back until go up from left
-                prev = root;
-                root = root.left;
+                return prev;
             }
         }
-        return prev;
+        return null;
     }
 }
