@@ -25,11 +25,45 @@
  *
  * 0 <= s.length <= 20
  * s consists of digits only.
+ *
+ *
+ *  List<String> res;
+ *     public List<String> restoreIpAddresses(String s) {
+ *         res = new ArrayList<>();
+ *         if(s.length() < 4 || s.length() > 12) return res;
+ *         backtrack(s, 0, 0, "");
+ *         return res;
+ *     }
+ *
+ *     public void backtrack(String s, int index, int cut, String curIp) {
+ *         if(cut == 3 && index < s.length() && validSubnet(s.substring(index))) {
+ *             curIp+=s.substring(index);
+ *             res.add(curIp);
+ *             return;
+ *         }
+ *         String cp = curIp;
+ *         for(int i = index + 1; i<=index + 3 && i<=s.length(); i++) {
+ *             String temp = s.substring(index, i);
+ *             if(validSubnet(temp)) {
+ *                 curIp+= temp + ".";
+ *                 backtrack(s, i, cut+1, curIp);
+ *                 curIp = cp;
+ *             }
+ *         }
+ *     }
+ *
+ *     public boolean validSubnet(String val) {
+ *         if(val.length() > 1 && val.charAt(0) == '0') return false;
+ *         int value = Integer.parseInt(val);
+ *         return value >=0 && value <=255;
+ *     }
+ *
  */
 
 
 import java.util.*;
 public class RestoreIPAddresses {
+
     List<String> res;
     public List<String> restoreIpAddresses(String s) {
         res = new ArrayList<>();
@@ -38,27 +72,27 @@ public class RestoreIPAddresses {
         return res;
     }
 
-    public void backtrack(String s, int index, int cut, String curIp) {
-        if(cut == 3 && index < s.length() && validSubnet(s.substring(index))) {
-            curIp+=s.substring(index);
-            res.add(curIp);
+    public void backtrack(String s, int index, int cut, String subNet) {
+        if(cut == 3 && isValidSubNet(s.substring(index))) {
+            subNet += s.substring(index);
+            res.add(subNet);
             return;
         }
-        String cp = curIp;
-        for(int i = index + 1; i<=index + 3 && i<=s.length(); i++) {
-            String temp = s.substring(index, i);
-            if(validSubnet(temp)) {
-                curIp+= temp + ".";
-                backtrack(s, i, cut+1, curIp);
-                curIp = cp;
+
+        for(int i = 1; i<=3; i++) {
+            if(index + i <= s.length() && isValidSubNet(s.substring(index, index + i))) {
+                backtrack(s, index + i, cut + 1, subNet + s.substring(index, index + i) + ".");
             }
         }
     }
 
-    public boolean validSubnet(String val) {
-        if(val.length() > 1 && val.charAt(0) == '0') return false;
-        int value = Integer.parseInt(val);
-        return value >=0 && value <=255;
+    public boolean isValidSubNet(String sub) {
+        if(sub.length() == 0 || sub.length() > 3) return false;
+        int val = Integer.valueOf(sub);
+        if(val > 0 && sub.charAt(0) == '0') return false;
+        if(val == 0 && sub.length() > 1) return false;
+        if(val > 255) return false;
+        return true;
     }
 
     public static void main(String ... args) {
