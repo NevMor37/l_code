@@ -37,9 +37,65 @@
  * board.length == 3
  * board[i].length == 3
  * board[i][j] is either 'X', 'O', or ' '.
+ *
+ * at most one winner
+ * num of X has to be greater than or equal O
+ * if O win, turns == 0
+ * if X win turns == 1
+ * X - O <= 1
  */
 import java.util.*;
 public class ValidTicTacToeState {
     public boolean validTicTacToe(String[] board) {
+        int [] row = new int [3];
+        int [] col = new int [3];
+        int diag = 0;
+        int anti = 0;
+        int turns = 0;
+        int xCount = 0;
+        int oCount = 0;
+        boolean oWin = false;
+        boolean xWin = false;
+        for(int i = 0; i < board.length; i++) {
+            String str = board[i];
+            for(int j = 0; j<str.length(); j++) {
+                char c = str.charAt(j);
+                if(c == 'O') {
+                    row[i]--;
+                    col[j]--;
+                    turns--;
+                    if(i == j) {
+                        diag--;
+                    }
+                    if(i + j == 2) {
+                        anti--;
+                    }
+                    oCount++;
+                } else if(c == 'X') {
+                    row[i]++;
+                    col[j]++;
+                    turns++;
+                    if(i == j) {
+                        diag++;
+                    }
+                    if(i + j == 2) {
+                        anti++;
+                    }
+                    xCount++;
+                }
+            }
+        }
+        if(Math.abs(xCount - oCount) > 1) return false;
+        if(oCount > xCount) return false;
+        if(row[0] == 3 || row[1] == 3 || row[2] == 3 || col[0] == 3 || col[1] == 3 || col[2] == 3 || diag == 3 || anti == 3) {
+            xWin = true;
+        }
+        if(row[0] == -3 || row[1] == -3 || row[2] == -3 || col[0] == -3 || col[1] == -3 || col[2] == -3 || diag == -3 || anti == -3) {
+            oWin = true;
+        }
+        if(xWin && oWin) return false;
+        if(xWin && (turns != 1)) return false;
+        if(oWin && turns != 0) return false;
+        return true;
     }
 }
